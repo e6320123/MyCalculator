@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #calc {
+            /* text-align: center; */
+            border: 2px solid grey;
+            width: 300px;
+            height: 380px;
+            background-color: #EBEBFF;
+            position: absolute;
+            margin: auto;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        button {
+            width: 65px;
+            height: 40px;
+            font-size: 25px;
+        }
+
+        #calc>div {
+            margin: 5px;
+        }
+
+        div>p {
+            margin: 50px 30px 55px 30px;
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="calc">
+        <div id="show">
+            <p style="font-size: 45px; text-align: right">
+                <span id="calcResult" style="color: black;">0</span>
+            </p>
+        </div>
+        <!-- &emsp; style="margin: 55px 5px 5px 148px;" -->
+        <div>
+            <button onclick="AC()">C</button>
+            <button onclick="p()">pow</button>
+            <button onclick="s()">sqrt</button>
+            <button onclick="bks()">←</button>
+        </div>
+
+        <div>
+            <button onclick="showNum('7')">7</button>
+            <button onclick="showNum('8')">8</button>
+            <button onclick="showNum('9')">9</button>
+            <button onclick="operator('÷')">÷</button>
+
+        </div>
+        <div>
+            <button onclick="showNum('4')">4</button>
+            <button onclick="showNum('5')">5</button>
+            <button onclick="showNum('6')">6</button>
+            <button onclick="operator('X')">X</button>
+        </div>
+        <div>
+            <button onclick="showNum('1')">1</button>
+            <button onclick="showNum('2')">2</button>
+            <button onclick="showNum('3')">3</button>
+            <button onclick="operator('-')">-</button>
+            <!-- <button onclick="logNum()">log</button>
+            <button onclick="clog()">clog</button> -->
+
+        </div>
+        <div>
+            <button onclick="showNum('0')" style="width: 137px;">0</button>
+            <!-- <button onclick="showNum('.')"> .</button> -->
+            <button onclick="ans()">=</button>
+            <button onclick="operator('+')">+</button>
+
+        </div>
+    </div>
+
+
+
+    <script>
+        var result = 0;
+        var temp = "";
+        var op = "";
+        var opFlag = false;
+        var resultFlag = false;
+
+        function p(a) {
+            a = document.getElementById("calcResult").innerHTML;
+            var re = Math.pow(a, 2);
+            document.getElementById("calcResult").innerHTML = re;
+            // 2.顯示存入temp
+            temp = parseInt(document.getElementById("calcResult").innerHTML);
+        }
+
+        function s(a) {
+            a = document.getElementById("calcResult").innerHTML;
+            var re = Math.sqrt(a);
+            document.getElementById("calcResult").innerHTML = re;
+            // 2.顯示存入temp
+            temp = parseInt(document.getElementById("calcResult").innerHTML);
+        }
+
+        function bks() {
+
+            var str = document.getElementById("calcResult").innerHTML;
+            var strlast = str.substr(str.length - 1, 1)
+            // console.log(str);
+            //console.log(strlast);
+            document.getElementById("calcResult").innerHTML = (str - strlast) / 10;
+            //console.log(("01234567"-"7")/10);
+            //console.log((str-strlast)/10);
+            // 顯示存入temp
+            temp = parseInt(document.getElementById("calcResult").innerHTML);
+        }
+
+        function clog() {
+            console.clear();
+        }
+
+        function AC() {
+            document.getElementById("calcResult").innerHTML = "0";
+            result = 0;
+            temp = "";
+            op = "";
+            opFlag = false;
+            resultFlag = false;
+        }
+
+        function showNum(num) {
+
+
+            // = 後按按鈕顯示新數字
+            if (resultFlag) {
+                document.getElementById("calcResult").innerHTML = "&emsp;";
+                resultFlag = false;
+            }
+            //數字0與運算符後重置顯示螢幕
+            if (document.getElementById("calcResult").innerHTML == "0" || opFlag == true) {
+                //清空顯示
+                document.getElementById("calcResult").innerHTML = "&emsp;";
+                opFlag = false;
+            }
+
+            //1.累加顯示到html
+            document.getElementById("calcResult").innerHTML += num;
+            // 2.顯示存入temp
+            temp = parseInt(document.getElementById("calcResult").innerHTML);
+
+
+        }
+
+        function operator(e) {
+
+            //判斷是否重複按op
+            if (opFlag == true) {
+
+
+            } else {
+                //1.判斷op是否為空
+                if (op == "") {
+                    //2.空-
+                    //    2.1存入op
+                    op = e;
+                    //    2.2temp存入result
+                    result = temp;
+                } else {
+                    //3.有op-
+
+                    // 3.1 result op temp 答案存入result
+                    switch (op) {
+                        case "+":
+                            result += temp;
+                            break;
+                        case "-":
+                            result -= temp;
+                            break;
+                        case "X":
+                            result *= temp;
+                            break;
+                        case "÷":
+                            result /= temp;
+                            break;
+                            //result 顯示到螢幕
+                            document.getElementById("calcResult").innerHTML = result;
+                    }
+                    //    3.2更新op
+                    op = e;
+                }
+                //op按下後顯示新數字旗標
+                opFlag = true;
+            }
+
+        }
+
+        function ans() {
+            // 1.result op temp 答案存入result
+            switch (op) {
+                case "+":
+                    result += temp;
+                    break;
+                case "-":
+                    result -= temp;
+                    break;
+                case "X":
+                    result *= temp;
+                    break;
+                case "÷":
+                    result /= temp;
+                    break;
+            }
+
+            // 2.清空顯示數字
+            document.getElementById("calcResult").innerHTML = "&emsp;";
+            // 3.顯示result
+            document.getElementById("calcResult").innerHTML = result;
+
+
+
+            //清除參數  
+            op = "";
+
+            temp = result;
+
+
+        }
+
+        function logNum() {
+            var a = document.getElementById("calcResult").innerHTML;
+            console.log("------------------------------------------------");
+            console.log("show = " + a + "  type: "+typeof (a)); 
+            console.log("result = " + result + "  type: " + typeof (result));
+            //console.log("inputOP = " + inputOP + "  type: " + typeof (inputOP));
+            console.log("op = " + op + "  type: " + typeof (op));
+            console.log("temp = " + temp + "  type: " + typeof (temp));
+
+
+        }
+    </script>
+</body>
+
+</html>
